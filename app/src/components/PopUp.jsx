@@ -1,13 +1,21 @@
 import React from 'react'
 import { useState } from 'react'
 
-const PopUp = ({username, setUsername, setuserDef}) => {
+const PopUp = ({chats, setchats, socket, setUsername, setuserDef}) => {
   const [inputName, setinputName] = useState("")
   const submitUsername = (e) => {
     e.preventDefault();
     const trimmed = inputName.trim();
     if(!trimmed) return;
-    setUsername(inputName);
+    const date = new Date();
+    const time = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    const info = {id:Date.now(), type: "join", user: trimmed, time}
+    socket.current.emit('joinRoom', info)
+    setchats((chats)=>[...chats,info]);
+    setUsername(trimmed);
     setuserDef(true);
   }
   return (

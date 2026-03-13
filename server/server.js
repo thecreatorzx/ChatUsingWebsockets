@@ -17,8 +17,25 @@ const io = new Server(server, {
   },
 });
 
+const ROOM = "group";
 io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
+  socket.on("joinRoom", async (msg) => {
+    await socket.join(ROOM);
+    //send to all even self
+    // io.to(ROOM).emit("roomNotice", username);
+    // broadcast
+    socket.to(ROOM).emit("roomNotice", msg);
+  });
+  socket.on("chatMessage", async (msg) => {
+    socket.to(ROOM).emit("chatMessage", msg);
+  });
+  socket.on("typing", (username) => {
+    socket.to(ROOM).emit("typing", username);
+  });
+  socket.on("stoptyping", (username) => {
+    socket.to(ROOM).emit("stoptyping", username);
+  });
 });
 
 app.get("/", (req, res) => {
