@@ -58,7 +58,7 @@ useEffect(() => {
   }
   timer.current = setTimeout(()=> {
   socket.current.emit('stoptyping', username);
-  },10000);
+  },1000);
   return () => {
     clearTimeout(timer.current);
   }
